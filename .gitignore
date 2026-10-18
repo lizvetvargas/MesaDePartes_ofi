@@ -1,0 +1,10 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+instance/
+database/*.db
+documentos_privados/*
+!documentos_privados/.gitkeep

@@ -1,0 +1,7 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Mesa de Partes{% endblock %} | Santa Rita de Casia</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/base.css') }}">{% block styles %}{% endblock %}</head>
+<body><header class="topbar"><a class="brand" href="{{ url_for('inicio') }}"><span class="brand-mark">SR</span><span>Santa Rita de Casia<small>Mesa de Partes Digital</small></span></a>
+<nav><a href="{{ url_for('inicio') }}">Inicio</a>{% if current_user.is_authenticated %}<span class="user-pill">{{ current_user.nombre }} · {{ current_user.rol|title }}</span><form class="inline" method="post" action="{{ url_for('auth.salir') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="nav-button">Salir</button></form>{% endif %}</nav></header>
+<main class="page">{% with msgs=get_flashed_messages(with_categories=true) %}{% for cat,msg in msgs %}<div class="flash {{ cat }}">{{ msg }}</div>{% endfor %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer>Jardín Santa Rita de Casia · Atención digital con responsabilidad y confianza</footer></body></html>
