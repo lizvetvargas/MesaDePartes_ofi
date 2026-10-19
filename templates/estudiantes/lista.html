@@ -1,1 +1,77 @@
-{% extends "base.html" %}{% block title %}Estudiantes{% endblock %}{% block content %}<div class="heading rowhead"><div><p class="eyebrow">REGISTRO ESCOLAR</p><h1>Estudiantes</h1></div><a class="button gold" href="{{ url_for('estudiantes.registrar') }}">＋ Registrar estudiante</a></div><div class="table-wrap"><table><tr><th>Apellidos</th><th>Nombres</th><th>Grado</th><th>Sección</th><th>Código</th><th></th></tr>{% for e in estudiantes %}<tr><td>{{ e.apellidos }}</td><td>{{ e.nombres }}</td><td>{{ e.grado }}</td><td>{{ e.seccion }}</td><td>{{ e.codigo_interno }}</td><td><a href="{{ url_for('estudiantes.detalle',estudiante_id=e.id) }}">Ver</a></td></tr>{% endfor %}</table></div>{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Estudiantes{% endblock %}
+{% block content %}
+<style>
+.est-list{color:#172b4d}
+.est-list .eyebrow{color:#a47d35;font-size:12px;font-weight:700;letter-spacing:2px}
+.est-list h1{margin:8px 0;font-size:30px}
+.est-list .muted{color:#667085;line-height:1.5}
+.est-list .top-actions{display:flex;justify-content:flex-end;margin:22px 0}
+.est-list .btn{display:inline-block;padding:11px 16px;border-radius:6px;background:#b18a42;color:white;text-decoration:none;font-size:13px;font-weight:700}
+.est-list .table-wrap{overflow-x:auto;background:#fffdf8;border:1px solid #e6dfd0;border-radius:10px;box-shadow:0 6px 20px #172b4d0d}
+.est-list table{width:100%;min-width:1250px;border-collapse:collapse;text-align:left}
+.est-list th{background:#172b4d;color:white;padding:14px 12px;font-size:12px;white-space:nowrap}
+.est-list td{padding:13px 12px;border-bottom:1px solid #eee8dc;font-size:13px;color:#344054;white-space:nowrap}
+.est-list tbody tr:hover{background:#f8f5ed}
+.est-list .links{display:flex;gap:12px}
+.est-list .links a{color:#172b4d;font-weight:700;text-decoration:none}
+.est-list .links a:hover{color:#a47d35;text-decoration:underline}
+.est-list .empty{text-align:center;padding:24px;color:#667085}
+</style>
+
+<div class="est-list">
+    <p class="eyebrow">REGISTRO ESCOLAR</p>
+    <h1>Estudiantes</h1>
+    <p class="muted">Consulta los datos escolares y administra los perfiles registrados.</p>
+
+    {% if current_user.rol in ['direccion', 'administrador', 'secretaria'] %}
+    <div class="top-actions">
+        <a class="btn" href="{{ url_for('estudiantes.registrar') }}">＋ Registrar estudiante</a>
+    </div>
+    {% endif %}
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Apellidos</th>
+                    <th>Nombres</th>
+                    <th>DNI</th>
+                    <th>Código matrícula</th>
+                    <th>Nivel</th>
+                    <th>Edad</th>
+                    <th>Aula / color</th>
+                    <th>Sección</th>
+                    <th>Código interno</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{ estudiante.apellidos }}</td>
+                    <td>{{ estudiante.nombres }}</td>
+                    <td>{{ estudiante.dni or "—" }}</td>
+                    <td>{{ estudiante.codigo_matricula or "—" }}</td>
+                    <td>{{ estudiante.nivel or "Inicial" }}</td>
+                    <td>{{ estudiante.grado or "—" }}</td>
+                    <td>{{ estudiante.aula or "—" }}</td>
+                    <td>{{ estudiante.seccion or "—" }}</td>
+                    <td>{{ estudiante.codigo_interno }}</td>
+                    <td>
+                        <div class="links">
+                            <a href="{{ url_for('estudiantes.detalle', estudiante_id=estudiante.id) }}">Ver perfil</a>
+                            {% if current_user.rol in ['direccion', 'administrador', 'secretaria'] %}
+                            <a href="{{ url_for('estudiantes.editar', estudiante_id=estudiante.id) }}">Editar</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="10" class="empty">Todavía no hay estudiantes registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

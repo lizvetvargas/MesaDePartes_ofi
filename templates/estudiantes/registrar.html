@@ -1,1 +1,110 @@
-{% extends "base.html" %}{% block title %}Registrar estudiante{% endblock %}{% block content %}<div class="heading"><p class="eyebrow">REGISTRO ESCOLAR</p><h1>Registrar estudiante</h1></div><div class="form-card"><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Nombres</label><input name="nombres" required><label>Apellidos</label><input name="apellidos" required><label>Grado</label><input name="grado"><label>Sección</label><input name="seccion"><button class="button gold">Guardar estudiante</button></form></div>{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Registrar estudiante{% endblock %}
+{% block content %}
+<style>
+.est-form{max-width:900px;margin:auto;color:#172b4d}
+.est-form .eyebrow{color:#a47d35;font-size:12px;font-weight:700;letter-spacing:2px}
+.est-form h1{margin:8px 0;font-size:30px}
+.est-form .muted{color:#667085;line-height:1.6}
+.est-form .card{margin-top:24px;padding:28px;background:#fffdf8;border:1px solid #e6dfd0;border-radius:10px;box-shadow:0 6px 20px #172b4d0d}
+.est-form .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}
+.est-form .field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.est-form label{font-size:13px;font-weight:700;color:#253858}
+.est-form input,.est-form select{box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid #d8dce4;border-radius:6px;background:white;color:#172b4d;font:inherit}
+.est-form input:focus,.est-form select:focus{outline:none;border-color:#b18a42;box-shadow:0 0 0 3px #b18a4226}
+.est-form small{color:#667085;font-size:12px;line-height:1.5}
+.est-form .actions{display:flex;justify-content:flex-end;margin-top:25px;padding-top:20px;border-top:1px solid #e6dfd0}
+.est-form button{padding:12px 22px;border:0;border-radius:6px;background:#b18a42;color:white;font-weight:700;cursor:pointer}
+.est-form button:hover{background:#947032}
+@media(max-width:600px){.est-form .grid{grid-template-columns:1fr}.est-form .card{padding:18px}.est-form button{width:100%}}
+</style>
+
+<div class="est-form">
+    <p class="eyebrow">REGISTRO ESCOLAR</p>
+    <h1>Registrar estudiante</h1>
+    <p class="muted">Registra los datos del estudiante del Jardín Santa Rita de Casia.</p>
+
+    <div class="card">
+        <h2>Datos del estudiante</h2>
+        <p class="muted">Los campos marcados con * son obligatorios.</p>
+
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="grid">
+                <div class="field">
+                    <label for="nombres">Nombres *</label>
+                    <input id="nombres" name="nombres" maxlength="120"
+                           value="{{ request.form.get('nombres', '') }}" required>
+                </div>
+
+                <div class="field">
+                    <label for="apellidos">Apellidos *</label>
+                    <input id="apellidos" name="apellidos" maxlength="120"
+                           value="{{ request.form.get('apellidos', '') }}" required>
+                </div>
+
+                <div class="field">
+                    <label for="dni">DNI del estudiante *</label>
+                    <input id="dni" name="dni" type="text" inputmode="numeric"
+                           pattern="[0-9]{8}" minlength="8" maxlength="8"
+                           value="{{ request.form.get('dni', '') }}"
+                           placeholder="8 dígitos" required>
+                    <small>Se utilizará para buscar al estudiante en las solicitudes.</small>
+                </div>
+
+                <div class="field">
+                    <label for="codigo_matricula">Código de matrícula</label>
+                    <input id="codigo_matricula" name="codigo_matricula" maxlength="50"
+                           value="{{ request.form.get('codigo_matricula', '') }}"
+                           placeholder="Código oficial, si corresponde">
+                </div>
+
+                <div class="field">
+                    <label for="nivel">Nivel educativo *</label>
+                    <select id="nivel" name="nivel" required>
+                        <option value="Inicial" selected>Inicial</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="grado">Edad *</label>
+                    <select id="grado" name="grado" required>
+                        <option value="">Seleccionar edad</option>
+                        {% for edad in edades %}
+                        <option value="{{ edad }}"
+                        {% if request.form.get('grado', '') == edad %}selected{% endif %}>
+                            {{ edad }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="aula">Aula / color</label>
+                    <input id="aula" name="aula" list="lista-aulas" maxlength="30"
+                           value="{{ request.form.get('aula', '') }}"
+                           placeholder="Nombre del aula">
+                    <datalist id="lista-aulas">
+                        {% for aula in aulas %}
+                        <option value="{{ aula }}">
+                        {% endfor %}
+                    </datalist>
+                    <small>Confirma los colores oficiales con el jardín.</small>
+                </div>
+
+                <div class="field">
+                    <label for="seccion">Sección</label>
+                    <input id="seccion" name="seccion" maxlength="30"
+                           value="{{ request.form.get('seccion', '') }}"
+                           placeholder="Ejemplo: A o B">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Guardar estudiante</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

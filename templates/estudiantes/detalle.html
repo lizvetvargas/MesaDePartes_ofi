@@ -1,1 +1,45 @@
-{% extends "base.html" %}{% block title %}Detalle de estudiante{% endblock %}{% block content %}<div class="heading"><p class="eyebrow">REGISTRO ESCOLAR</p><h1>{{ estudiante.apellidos }}, {{ estudiante.nombres }}</h1></div><div class="form-card"><p><strong>Código:</strong> {{ estudiante.codigo_interno }}</p><p><strong>Grado:</strong> {{ estudiante.grado or '—' }}</p><p><strong>Sección:</strong> {{ estudiante.seccion or '—' }}</p><p><strong>Cuenta vinculada:</strong> {{ estudiante.padre.nombre if estudiante.padre else 'Pendiente de verificación' }}</p></div>{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Perfil del estudiante{% endblock %}
+{% block content %}
+<style>
+.est-profile{max-width:950px;margin:auto;color:#172b4d}
+.est-profile .eyebrow{color:#a47d35;font-size:12px;font-weight:700;letter-spacing:2px}
+.est-profile h1{margin:8px 0;font-size:30px}
+.est-profile .muted{color:#667085;line-height:1.5}
+.est-profile .card{margin-top:24px;padding:26px;background:#fffdf8;border:1px solid #e6dfd0;border-radius:10px;box-shadow:0 6px 20px #172b4d0d}
+.est-profile .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.est-profile .data{padding:15px;background:#f8f5ed;border-radius:6px;overflow-wrap:anywhere}
+.est-profile .label{display:block;margin-bottom:8px;color:#667085;font-size:12px}
+.est-profile .value{font-size:15px;font-weight:700}
+.est-profile .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.est-profile .btn{display:inline-block;padding:11px 17px;border-radius:6px;background:#172b4d;color:white;text-decoration:none;font-size:13px;font-weight:700}
+.est-profile .gold{background:#b18a42}
+@media(max-width:600px){.est-profile .grid{grid-template-columns:1fr}.est-profile .card{padding:18px}}
+</style>
+
+<div class="est-profile">
+    <p class="eyebrow">REGISTRO ESCOLAR</p>
+    <h1>Perfil del estudiante</h1>
+    <p class="muted">Consulta la información personal y escolar del alumno.</p>
+
+    <div class="card">
+        <h2>{{ estudiante.apellidos }}, {{ estudiante.nombres }}</h2>
+        <div class="grid">
+            <div class="data"><span class="label">DNI</span><span class="value">{{ estudiante.dni or "No registrado" }}</span></div>
+            <div class="data"><span class="label">Código de matrícula</span><span class="value">{{ estudiante.codigo_matricula or "No registrado" }}</span></div>
+            <div class="data"><span class="label">Nivel educativo</span><span class="value">{{ estudiante.nivel or "Inicial" }}</span></div>
+            <div class="data"><span class="label">Edad</span><span class="value">{{ estudiante.grado or "No registrada" }}</span></div>
+            <div class="data"><span class="label">Aula / color</span><span class="value">{{ estudiante.aula or "No registrada" }}</span></div>
+            <div class="data"><span class="label">Sección</span><span class="value">{{ estudiante.seccion or "No registrada" }}</span></div>
+            <div class="data"><span class="label">Código interno</span><span class="value">{{ estudiante.codigo_interno }}</span></div>
+        </div>
+
+        <div class="actions">
+            {% if current_user.rol in ['direccion', 'administrador', 'secretaria'] %}
+            <a class="btn gold" href="{{ url_for('estudiantes.editar', estudiante_id=estudiante.id) }}">Editar perfil</a>
+            {% endif %}
+            <a class="btn" href="{{ url_for('estudiantes.lista') }}">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
